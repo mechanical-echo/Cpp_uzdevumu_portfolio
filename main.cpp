@@ -1,36 +1,43 @@
-#include <iostream>
+#include<stdio.h>
+#include<iostream>
 using namespace std;
-
-int main() {
-  int n; //veidi
-  int m; //konfeksu skaits no katra veida glitos iepakojumos
-  do{
-    cin>>n;
-  }while(n<1);
-  do{
+int main(){
+ int n, m;
+ do{
+    cin>>n; 
+ }while(n<1 || n>250000);
+ do{
     cin>>m;
-  }while(m>250000);
-  int a; //sarazotajs daudzums
-  int konfektes[n]; // katraa lodzinaa buus katrs veids
-  int iepakojumu_skaits[n];
-  int palikusi=0;
-  bool sanak= true;
-  for(int i=0; i<n; i++){
-    cin>>konfektes[i];
-    palikusi += konfektes[i]%m;
-    iepakojumu_skaits[i] = konfektes[i]/m;
-    if(i!=0){
-      if(iepakojumu_skaits[i]==iepakojumu_skaits[i-1] && sanak==true){
-        a = min(iepakojumu_skaits[i], iepakojumu_skaits[i-1]);
-        sanak=true;
-      }
-      else
-        sanak=false;
-    }
-  }
+ }while(m>250000 || m<1);
 
-  
-  cout<<a<<" "<<palikusi;
-  
-  
+ int* a = new int[n];
+ int* iepak = new int[n];
+ int* paliek = new int[n];
+ 
+ for(int i=0; i<n; i++){
+    do{
+        cin>>a[i];
+    }while(a[i]<0 || a[i]>250000);
+    iepak[i] = a[i]/m;
+ }
+ 
+ int t = iepak[0];
+ 
+ for(int i=1; i<n; i++){
+    t = min(t, iepak[i]);
+ }
+ 
+ for(int i=0; i<n; i++){
+    paliek[i] = a[i] - (m * t);
+ }
+ 
+ int b =0;
+ 
+ for(int i=0; i<n; i++){
+    b += paliek[i];
+ }
+ cout<<t<<" "<<b;
+delete[] a;
+delete[] paliek;
+delete[] iepak;
 }
