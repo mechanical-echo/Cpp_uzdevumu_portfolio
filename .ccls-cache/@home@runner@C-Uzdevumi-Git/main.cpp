@@ -3,161 +3,82 @@ using namespace std;
 
 void check(int field[10][10], int n, int m);
 
+bool check_1(int field[10][10], int x, int y, int n, int m);
 
+bool check_2(int field[10][10], int x, int y, int n, int m);
 
-
-/*
-bool check_3(int x, int y){
-   if(field[x][y+1]==9){
-    variations++;
-    return true;
-  }
-
-  if(field[x][y]==0){
-    y++;
-    if(!check_2(x,y)){
-      return check_3(x,y);
-    }else{
-      variations++;
-      return true;
-    }
-  }
-
-  //next
-  y++;
-  if(field[x][y]==5 || field[x][y]==-1){
-    return false;
-  }else
-  if(field[x][y]<5){
-    switch(field[x][y]){
-      case 1:
-        return false;
-      break;
-      case 2:
-        return check_2(x,y);
-      break;
-      case 3:
-        return check_3(x,y);
-      break;
-      case 4:
-        return false;
-      break;
-    }
-  }
-}
-
-bool check_4(int x, int y){
-  
-}
-*/
+static int variations = 0;
 int main() {
   int n, m;
-  int field[10][10];    
-  int variations =0;
- 
-//  do{
-    
-//  }while(n>10);
- // do{
-  cin>>m;  
-  cin>>n;
-  //}while (m>10);
-  
+  int field[10][10];
+  cin >> m;
+  cin >> n;
+
   int counter_rows = 0;
   int counter_cols = 0;
-  
-  for(int i=0; i<n; i++){
-    for(int j =0; j<m; j++){
-      //if(counter_cols<m-1 && counter_rows<=n){
-        cin>>field[i][j];
-       // cout<<"input = "<<field[i][j]<<", on ["<<i<<"]["<<j<<"]\n";
-        //counter_cols++;
-      // }else if(i==n && j==m-1){
-      //   field[i][j]==9;
-      // }
-      
-      // else{
-      //   field[i][j]=-1;
-       // cout<<"other number on this row: "<<field[i][j]<<", on ["<<i<<"]["<<j<<"]\n";
-      }
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      cin >> field[i][j];
     }
-    //cout<<"\n";
-   // counter_cols=0;
-   // counter_rows++;
+  }
 
+  check_1(field, 0, 0, n, m);
+  check_2(field, 0, 0, n, m);
+  // check_2(0, 0);
+  cout << "vars = " << variations;
+}
 
+static int previous=0;
+static int variant[10][10];
+bool check_1(int field[10][10], int x, int y, int n, int m) {
+  if (y + 1 < m) {
+    // goes right because 1 and 3 are: L and -
+    y++;
+  }
+  // did it reached the end ?
+  if (x == m - 1 && y == n) { // example n=5 m=4
+    // tube reached the end
+    variations++;
+    return true;
+    // otherwise, if next square is empty
+  } else if (field[x][y] < 5) {
+    // check what could be plased;
+    return (check_2(field, x, y, n, m));
+  }  
+  return false;
+}
 
+bool check_2(int field[10][10], int x, int y, int n, int m) {
+  // checks 2 or 4
+  cout << "ch2 - x=" << x << ", y=" << y << "\n";
 
- // }
-  
+  // check if there is preset tube nearby
+  if (!(field[x + 1][y] < 5 && field[x + 1][y] > 0)) {
+    if (x + 1 < n) {
+      // goes down because 2 and 4 are: ^| and ||
+      x++;
+    }
+  }
+
   /*
-  for(int i=0; i<10; i++){  //rows
-    for(int j=0; j<10; j++){//columns
-      while(counter_rows>0 && counter_cols>0){//inside n*m field
-        cin>>field[i][j];   //user input
-        counter_cols--;
-      }
-      if(counter_rows<=0){
-        field[i][j]=-1;   //unused space
-      }
-    }
-    counter_cols = m;
-    counter_rows--;
-  }
-
-  //check
-  for(auto& x : field){
-    for(auto& y : x){
-      cout<<y<<" ";
-    }
-    cout<<"\n";
-  }
+  // did it reached the end ?
+  if (x==m-1 && y==n) {          // example n=5 m=4
+  //tube reached the end
+  variations++;
+  return true;
+  //otherwise, if next square is empty
+  } else
+  //commented out, beacuse 2 and 4 cannot reach the end, since their ends are
+  vertical
+  //while end is horizontal
+  //they simply won't reach it
   */
- //int variations = 0;
-  check(field,n,m);
-  //check_2(0, 0);
-  //cout<<"vars = "<<variations;
-
-
-
+  if (field[x][y] < 5) {
+    // check what could be plased;
+    previous = 2;
+    return (check_1(field, x, y, n, m));
+    // otherwise, if next square is preset tube
+  } 
+  return false;
 }
-
-void check(int field[10][10], int n, int m){
-  for(int i=0; i<n; i++){
-    for(int j=0; j<m; j++){
-      cout<<field[i][j]<<" ";
-    }
-    cout<<"\n";
-  }
-}
-
-// void check(int start_tube, int x, int y){
-//   int current = field[x][y];
-//   switch(current){
-//     case 0:
-//     switch(start_tube){
-//       case 1:
-//         //using 2
-//         if(field[x+1][y+1]==0){ //2
-//           x++; y++;
-//           if(field[x+1][y+1]==0){ //1
-//             x++; y++;
-//           }else if(field[x][y+2]==0){ //4
-//             y+=2;
-//           }
-//         }else if(field[x][y+2]>=0){ //3
-//           y+=2;
-//           //
-//         }
-//       break;
-//       case 4:
-//       break;
-//     }
-//     break;
-//     case 1:
-//     break;
-//     case 5 :
-//       variations = 0;
-//     break;
-//   }
-// }
